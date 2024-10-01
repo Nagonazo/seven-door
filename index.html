@@ -27,13 +27,16 @@
   </head>
   <body>
     <!-- メッセージ表示エリア -->
-    <div class="hud-text">指定の場所に移動してください</div>
+    <div class="hud-text">位置情報に基づいてARオブジェクトを表示します</div>
 
-    <!-- AR.jsのシーン --><br>
-    <a-scene embedded arjs="sourceType: gps; debugUIEnabled: false">
-      <a-entity gps-entity-place="latitude: 35.15881704693731; longitude: 136.90394448170932">
-        <a-text value="Happy Birthday!" color="red" position="0 20 0" scale="3 3 3"></a-text>
-      </a-entity>
+    <!-- AR.jsのシーン -->
+    <a-scene embedded arjs="debugUIEnabled: false">
+      <!-- GPS-Entity-Placeを使って、位置情報でARオブジェクトを表示 -->
+      <a-marker gps-entity-place="latitude: 35.123456; longitude: 136.654321;" distance="10">
+        <a-text value="Happy Birthday!" position="0 50 -10"></a-text>
+      </a-marker>
+
+      <!-- カメラの設定 -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
