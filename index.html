@@ -42,30 +42,30 @@
     <br>
     <div id="message">おめでとう！7つの扉を開きました！</div>
 
-    <a-scene embedded arjs>
-      <a-assets>
-        <img id="red" src="red_door.png" />
-        <img id="orange" src="orange_door.png" />
-        <img id="yellow" src="yellow_door.png" />
-        <img id="green" src="green_door.png" />
-        <img id="blue" src="blue_door.png" />
-        <img id="purple" src="purple_door.png" />
-        <img id="pink" src="pink_door.png" />
-      </a-assets>
-      
-      <a-marker preset="hiro">
-        <!-- 扉を並べて配置 -->
-        <a-image src="#red" position="-3 0 0" scale="1.5 3 1" id="door1" class="door" door-index="0"></a-image>
-        <a-image src="#orange" position="-2 0 0" scale="1.5 3 1" id="door2" class="door" door-index="1"></a-image>
-        <a-image src="#yellow" position="-1 0 0" scale="1.5 3 1" id="door3" class="door" door-index="2"></a-image>
-        <a-image src="#green" position="0 0 0" scale="1.5 3 1" id="door4" class="door" door-index="3"></a-image>
-        <a-image src="#blue" position="1 0 0" scale="1.5 3 1" id="door5" class="door" door-index="4"></a-image>
-        <a-image src="#indigo" position="2 0 0" scale="1.5 3 1" id="door6" class="door" door-index="5"></a-image>
-        <a-image src="#purple" position="3 0 0" scale="1.5 3 1" id="door7" class="door" door-index="6"></a-image>
-      </a-marker>
 
-      <a-entity camera></a-entity>
-    </a-scene>
+    <a-scene embedded arjs>
+  <a-assets>
+    <img id="red" src="red_door.png" />
+    <img id="orange" src="orange_door.png" />
+    <img id="yellow" src="yellow_door.png" />
+    <img id="green" src="green_door.png" />
+    <img id="blue" src="blue_door.png" />
+    <img id="pink" src="pink_door.png" />
+    <img id="purple" src="purple_door.png" />
+  </a-assets>
+
+  <a-marker preset="hiro">
+    <a-image src="#red" position="-3 0 -1" scale="1.5 3" id="door1"></a-image>
+    <a-image src="#orange" position="-2 0 -1" scale="1.5 3" id="door2"></a-image>
+    <a-image src="#yellow" position="-1 0 -1" scale="1.5 3" id="door3"></a-image>
+    <a-image src="#green" position="0 0 -1" scale="1.5 3" id="door4"></a-image>
+    <a-image src="#blue" position="1 0 -1" scale="1.5 3" id="door5"></a-image>
+    <a-image src="#pink" position="2 0 -1" scale="1.5 3" id="door6"></a-image>
+    <a-image src="#purple" position="3 0 -1" scale="1.5 3" id="door7"></a-image>
+  </a-marker>
+
+  <a-entity camera></a-entity>
+</a-scene>
 
     <script>
       const correctOrder = ['door1','door2','door3','door4','door5','door6','door7'];
