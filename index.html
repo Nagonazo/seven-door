@@ -1,43 +1,110 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <title>AR Example</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/master/aframe/build/aframe-ar.js"></script>
+    <meta charset="utf-8">
+    <title>7つの扉 - マーカー版</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/1.7.2/aframe/build/aframe-ar.min.js"></script>
     <style>
-      body, html {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-      }
-      .hud-text {
-        position: absolute;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 24px;
+      body { margin: 0; overflow: hidden; }
+      #message {
+        position: fixed;
+        top: 20%;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 2em;
         color: white;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 10px;
-        border-radius: 5px;
-        z-index: 1000;
+        z-index: 10;
+        display: none;
+        animation: fadeIn 1s forwards;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background: red;
+        animation: fall 2s linear infinite;
+        z-index: 10;
+      }
+      @keyframes fall {
+        0% { transform: translateY(-10px); opacity: 1; }
+        100% { transform: translateY(100vh); opacity: 0; }
       }
     </style>
   </head>
-  <body>
-    <!-- メッセージ表示エリア -->
-    <div class="hud-text">位置情報に基づいてARオブジェクトを表示します</div>
 
-    <!-- AR.jsのシーン -->
-    <a-scene embedded arjs="debugUIEnabled: false">
-      <!-- GPS-Entity-Placeを使って、位置情報でARオブジェクトを表示 -->
-      <a-marker gps-entity-place="latitude: 35.158760; longitude: 136.904261;" distance="100">
-        <a-text value="Happy Birthday!" position="0 25 -10"></a-text>
+  <body>
+    <div id="message">おめでとう！7つの扉を開きました！</div>
+
+    <a-scene embedded arjs>
+      <a-assets>
+        <img id="red" src="https://dummyimage.com/150x300/ff0000/ffffff.png&text=1" />
+        <img id="orange" src="https://dummyimage.com/150x300/ffa500/ffffff.png&text=2" />
+        <img id="yellow" src="https://dummyimage.com/150x300/ffff00/000000.png&text=3" />
+        <img id="green" src="https://dummyimage.com/150x300/00ff00/000000.png&text=4" />
+        <img id="blue" src="https://dummyimage.com/150x300/0000ff/ffffff.png&text=5" />
+        <img id="indigo" src="https://dummyimage.com/150x300/4b0082/ffffff.png&text=6" />
+        <img id="purple" src="https://dummyimage.com/150x300/800080/ffffff.png&text=7" />
+      </a-assets>
+
+      <a-marker preset="hiro">
+        <!-- 扉を並べて配置 -->
+        <a-image src="#red" position="-3 0 0" scale="1.5 3 1" id="door1" class="door" door-index="0"></a-image>
+        <a-image src="#orange" position="-2 0 0" scale="1.5 3 1" id="door2" class="door" door-index="1"></a-image>
+        <a-image src="#yellow" position="-1 0 0" scale="1.5 3 1" id="door3" class="door" door-index="2"></a-image>
+        <a-image src="#green" position="0 0 0" scale="1.5 3 1" id="door4" class="door" door-index="3"></a-image>
+        <a-image src="#blue" position="1 0 0" scale="1.5 3 1" id="door5" class="door" door-index="4"></a-image>
+        <a-image src="#indigo" position="2 0 0" scale="1.5 3 1" id="door6" class="door" door-index="5"></a-image>
+        <a-image src="#purple" position="3 0 0" scale="1.5 3 1" id="door7" class="door" door-index="6"></a-image>
       </a-marker>
 
-      <!-- カメラの設定 -->
       <a-entity camera></a-entity>
     </a-scene>
+
+    <script>
+      const correctOrder = ['door1','door2','door3','door4','door5','door6','door7'];
+      let currentStep = 0;
+
+      document.querySelectorAll('.door').forEach(door => {
+        door.addEventListener('click', () => {
+          const expected = correctOrder[currentStep];
+          if (door.id === expected) {
+            door.setAttribute('animation__glow', {
+              property: 'material.color',
+              to: '#ffffff',
+              dur: 300,
+              loop: false
+            });
+            currentStep++;
+            if (currentStep === correctOrder.length) {
+              document.getElementById('message').style.display = 'block';
+              showConfetti();
+            }
+          } else {
+            currentStep = 0;
+            document.querySelectorAll('.door').forEach(d => {
+              d.removeAttribute('animation__glow');
+              d.setAttribute('material', 'color', '');
+            });
+          }
+        });
+      });
+
+      function showConfetti() {
+        for (let i = 0; i < 100; i++) {
+          const confetti = document.createElement('div');
+          confetti.classList.add('confetti');
+          confetti.style.left = Math.random() * 100 + 'vw';
+          confetti.style.background = `hsl(${Math.random() * 360}, 100%, 70%)`;
+          document.body.appendChild(confetti);
+          setTimeout(() => confetti.remove(), 2000);
+        }
+      }
+    </script>
   </body>
 </html>
