@@ -1,111 +1,82 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <title>7つの扉 - マーカー版</title>
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/1.7.2/aframe/build/aframe-ar.min.js"></script>
-    <style>
-      body { margin: 0; overflow: hidden; }
-      #message {
-        position: fixed;
-        top: 20%;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-size: 2em;
-        color: white;
-        z-index: 10;
-        display: none;
-        animation: fadeIn 1s forwards;
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      .confetti {
-        position: fixed;
-        width: 10px;
-        height: 10px;
-        background: red;
-        animation: fall 2s linear infinite;
-        z-index: 10;
-      }
-      @keyframes fall {
-        0% { transform: translateY(-10px); opacity: 1; }
-        100% { transform: translateY(100vh); opacity: 0; }
-      }
-    </style>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/2.0.1/aframe/build/aframe-ar.min.js"></script>
   </head>
-
-  <body>
-    <div class="hud-text">7つの扉を<br>順番に開け</div>
-    <div id="message">おめでとう！7つの扉を開きました！</div>
-
-
+  <body style="margin: 0; overflow: hidden;">
     <a-scene embedded arjs>
-  <a-assets>
-    <img id="red" src="red_door.png" />
-    <img id="orange" src="orange_door.png" />
-    <img id="yellow" src="yellow_door.png" />
-    <img id="green" src="green_door.png" />
-    <img id="blue" src="blue_door.png" />
-    <img id="pink" src="pink_door.png" />
-    <img id="purple" src="purple_door.png" />
-  </a-assets>
+      
+      <a-marker preset="hiro">
+        <!-- 星たち -->
+        <a-entity id="stars" position="0 5 0"></a-entity>
 
-  <a-marker preset="hiro">
-    <a-image src="#red" position="-3 0 -1" scale="1.5 3" id="door1"></a-image>
-    <a-image src="#orange" position="-2 0 -1" scale="1.5 3" id="door2"></a-image>
-    <a-image src="#yellow" position="-1 0 -1" scale="1.5 3" id="door3"></a-image>
-    <a-image src="#green" position="0 0 -1" scale="1.5 3" id="door4"></a-image>
-    <a-image src="#blue" position="1 0 -1" scale="1.5 3" id="door5"></a-image>
-    <a-image src="#pink" position="2 0 -1" scale="1.5 3" id="door6"></a-image>
-    <a-image src="#purple" position="3 0 -1" scale="1.5 3" id="door7"></a-image>
-  </a-marker>
+        <!-- 流れ星 -->
+        <a-entity id="shootingStar" geometry="primitive: sphere; radius: 0.03" 
+                  material="color: #FFD700; emissive: #FFD700; emissiveIntensity: 2"
+                  position="0 5 0" visible="false">
+        </a-entity>
+      </a-marker>
 
-  <a-entity camera></a-entity>
-</a-scene>
+      <a-entity camera></a-entity>
+    </a-scene>
 
     <script>
-      const correctOrder = ['door1','door2','door3','door4','door5','door6','door7'];
-      let currentStep = 0;
+      // 星をたくさん生成
+      document.addEventListener('DOMContentLoaded', function () {
+        const stars = document.getElementById('stars');
+        const numStars = 100;
 
-      document.querySelectorAll('.door').forEach(door => {
-        door.addEventListener('click', () => {
-          const expected = correctOrder[currentStep];
-          if (door.id === expected) {
-            door.setAttribute('animation__glow', {
-              property: 'material.color',
-              to: '#ffffff',
-              dur: 300,
-              loop: false
-            });
-            currentStep++;
-            if (currentStep === correctOrder.length) {
-              document.getElementById('message').style.display = 'block';
-              showConfetti();
-            }
-          } else {
-            currentStep = 0;
-            document.querySelectorAll('.door').forEach(d => {
-              d.removeAttribute('animation__glow');
-              d.setAttribute('material', 'color', '');
-            });
-          }
-        });
-      });
-
-      function showConfetti() {
-        for (let i = 0; i < 100; i++) {
-          const confetti = document.createElement('div');
-          confetti.classList.add('confetti');
-          confetti.style.left = Math.random() * 100 + 'vw';
-          confetti.style.background = `hsl(${Math.random() * 360}, 100%, 70%)`;
-          document.body.appendChild(confetti);
-          setTimeout(() => confetti.remove(), 2000);
+        for (let i = 0; i < numStars; i++) {
+          const star = document.createElement('a-sphere');
+          const posX = (Math.random() - 0.5) * 20;
+          const posY = Math.random() * 10;
+          const posZ = (Math.random() - 0.5) * 20;
+          star.setAttribute('position', `${posX} ${posY} ${posZ}`);
+          const size = 0.01 + Math.random() * 0.02;
+          star.setAttribute('radius', size);
+          star.setAttribute('color', '#FFFFFF');
+          star.setAttribute('material', 'emissive: #FFFFFF; emissiveIntensity: 1');
+          stars.appendChild(star);
         }
-      }
+
+        // 流れ星の動き
+        const shootingStar = document.getElementById('shootingStar');
+
+        function spawnShootingStar() {
+          // ランダムなスタート位置
+          const startX = (Math.random() - 0.5) * 10;
+          const startY = 8 + Math.random() * 2; // 上の方から
+          const startZ = (Math.random() - 0.5) * 10;
+          shootingStar.setAttribute('position', `${startX} ${startY} ${startZ}`);
+          shootingStar.setAttribute('visible', 'true');
+
+          // ランダムな移動先
+          const endX = startX + (Math.random() - 0.5) * 5;
+          const endY = startY - (Math.random() * 5);
+          const endZ = startZ + (Math.random() - 0.5) * 5;
+
+          // 移動アニメーション
+          shootingStar.setAttribute('animation', {
+            property: 'position',
+            to: `${endX} ${endY} ${endZ}`,
+            dur: 1000,   // 1秒で移動
+            easing: 'linear'
+          });
+
+          // 移動が終わったら非表示
+          setTimeout(() => {
+            shootingStar.setAttribute('visible', 'false');
+          }, 1000);
+        }
+
+        // ランダムな間隔で流れ星を発生
+        setInterval(() => {
+          if (Math.random() < 0.5) { // 50%の確率で出現
+            spawnShootingStar();
+          }
+        }, 3000); // 3秒ごとにチャンス
+      });
     </script>
   </body>
 </html>
