@@ -65,8 +65,8 @@
 
           if (isCorrect) {
             lightEffect.setAttribute('visible', true);
-            text.setAttribute('visible', true);
-            text.emit('showText');
+            successText.setAttribute('visible', true);
+            successText.emit('showText');
 
             confettis.forEach((c, i) => {
               c.setAttribute('visible', true);
@@ -80,7 +80,7 @@
             });
           } else {
             lightEffect.setAttribute('visible', false);
-            text.setAttribute('visible', false);
+            successText.setAttribute('visible', false);
             confettis.forEach(c => {
               c.setAttribute('visible', false);
               c.removeAttribute('animation__fall');
