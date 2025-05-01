@@ -22,7 +22,6 @@
                  scale="5 5 5">
         </a-image>
 
-
         <!-- 成功テキスト -->
         <a-entity id="successText"
                   position="0 1.5 0"
@@ -32,12 +31,12 @@
                   animation__fadein="property: material.opacity; from: 0; to: 1; dur: 1000; startEvents: showText">
         </a-entity>
 
-        <!-- 光る演出 -->
+        <!-- 光のエフェクト -->
         <a-entity id="lightEffect" visible="false">
-          <a-light type="point" intensity="2" color="yellow" position="0 2 0"></a-light>
+          <a-sphere position="0 1.5 0" radius="0.5" color="yellow" material="emissive: yellow; emissiveIntensity: 1; opacity: 0.5"></a-sphere>
         </a-entity>
 
-        <!-- 紙吹雪（複数配置） -->
+        <!-- 紙吹雪 -->
         <a-image id="confetti1" src="#confetti" position="0 2 -1" scale="0.3 0.3 0.3" visible="false"></a-image>
         <a-image id="confetti2" src="#confetti" position="0.5 2.2 -1" scale="0.3 0.3 0.3" visible="false"></a-image>
         <a-image id="confetti3" src="#confetti" position="-0.5 2.4 -1" scale="0.3 0.3 0.3" visible="false"></a-image>
@@ -53,13 +52,13 @@
           document.querySelector('#confetti2'),
           document.querySelector('#confetti3')
         ];
+        const text = document.querySelector('#successText');
         const correctAngle = 0;
         let currentY = 0;
 
         document.body.addEventListener('click', (e) => {
           const screenWidth = window.innerWidth;
           const isRight = e.clientX > screenWidth / 2;
-
           currentY = isRight ? currentY + 45 : currentY - 45;
           currentY = (currentY + 360) % 360;
           box.setAttribute('rotation', `0 ${currentY} 0`);
@@ -68,9 +67,12 @@
 
           if (isCorrect) {
             lightEffect.setAttribute('visible', true);
+            text.setAttribute('visible', true);
+            text.emit('showText');
+
             confettis.forEach((c, i) => {
               c.setAttribute('visible', true);
-              c.setAttribute('animation', {
+              c.setAttribute(`animation__fall`, {
                 property: 'position',
                 to: `${c.getAttribute('position').x} -1 ${c.getAttribute('position').z}`,
                 dur: 2000 + i * 300,
@@ -80,9 +82,10 @@
             });
           } else {
             lightEffect.setAttribute('visible', false);
+            text.setAttribute('visible', false);
             confettis.forEach(c => {
               c.setAttribute('visible', false);
-              c.removeAttribute('animation');
+              c.removeAttribute('animation__fall');
             });
           }
         });
