@@ -27,8 +27,6 @@
                   position="0 3 0"
                   visible="false"
                   text="value: 成功！; color: gold; align: center; width: 4"
-                  material="opacity: 0"
-                  animation__fadein="property: material.opacity; from: 0; to: 1; dur: 1000; startEvents: showText">
         </a-entity>
 
         <!-- 光のエフェクト -->
@@ -52,7 +50,7 @@
           document.querySelector('#confetti2'),
           document.querySelector('#confetti3')
         ];
-        const text = document.querySelector('#successText');
+        const successText = document.querySelector('#successText');
         const correctAngle = 0;
         let currentY = 0;
 
