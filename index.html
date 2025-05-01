@@ -1,22 +1,27 @@
+<!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
+    <title>AR Santa Box</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://rawcdn.githack.com/jeromeetienne/ar.js/2.0.1/aframe/build/aframe-ar.min.js"></script>
   </head>
-  <body style="margin: 0; overflow: hidden">
+  <body style="margin: 0; overflow: hidden;">
     <a-scene embedded arjs>
       <a-assets>
-        <img id="gift" src="gift.png">
+        <img id="present" src="present.png" />
+        <img id="confetti" src="confetti.png" />
       </a-assets>
 
-      <a-marker preset="hiro" id="marker">
-        <!-- プレゼントボックス -->
-        <a-image id="giftbox"
-                 src="#gift"
-                 rotation="0 270 0"
+      <a-marker preset="hiro">
+        <!-- プレゼント画像 -->
+        <a-image id="box"
+                 src="#present"
                  position="0 0 0"
+                 rotation="-90 0 0"
                  scale="5 5 5">
         </a-image>
+
 
         <!-- 成功テキスト -->
         <a-entity id="successText"
@@ -26,23 +31,59 @@
                   material="opacity: 0"
                   animation__fadein="property: material.opacity; from: 0; to: 1; dur: 1000; startEvents: showText">
         </a-entity>
+
+        <!-- 光る演出 -->
+        <a-entity id="lightEffect" visible="false">
+          <a-light type="point" intensity="2" color="yellow" position="0 2 0"></a-light>
+        </a-entity>
+
+        <!-- 紙吹雪（複数配置） -->
+        <a-image id="confetti1" src="#confetti" position="0 2 -1" scale="0.3 0.3 0.3" visible="false"></a-image>
+        <a-image id="confetti2" src="#confetti" position="0.5 2.2 -1" scale="0.3 0.3 0.3" visible="false"></a-image>
+        <a-image id="confetti3" src="#confetti" position="-0.5 2.4 -1" scale="0.3 0.3 0.3" visible="false"></a-image>
       </a-marker>
 
       <a-entity camera></a-entity>
 
       <script>
-        const gift = document.getElementById('giftbox');
-        const successText = document.getElementById('successText');
+        const box = document.querySelector('#box');
+        const lightEffect = document.querySelector('#lightEffect');
+        const confettis = [
+          document.querySelector('#confetti1'),
+          document.querySelector('#confetti2'),
+          document.querySelector('#confetti3')
+        ];
+        const correctAngle = 0;
+        let currentY = 0;
 
-        gift.addEventListener('click', () => {
-          let currentY = gift.getAttribute('rotation').y;
-          let nextY = (currentY + 45) % 360;
-          gift.setAttribute('rotation', `0 ${nextY} 0`);
+        document.body.addEventListener('click', (e) => {
+          const screenWidth = window.innerWidth;
+          const isRight = e.clientX > screenWidth / 2;
 
-          // 正解の方向が90度（右向き）
-          if (nextY === 90) {
-            successText.setAttribute('visible', true);
-            successText.emit('showText');
+          currentY = isRight ? currentY + 45 : currentY - 45;
+          currentY = (currentY + 360) % 360;
+          box.setAttribute('rotation', `0 ${currentY} 0`);
+
+          const isCorrect = (Math.abs(currentY - correctAngle) <= 10 || Math.abs(currentY - correctAngle + 360) <= 10);
+
+          if (isCorrect) {
+            lightEffect.setAttribute('visible', true);
+            confettis.forEach((c, i) => {
+              c.setAttribute('visible', true);
+              c.setAttribute('animation', {
+                property: 'position',
+                to: `${c.getAttribute('position').x} -1 ${c.getAttribute('position').z}`,
+                dur: 2000 + i * 300,
+                easing: 'easeOutQuad',
+                loop: false
+              });
+            });
+          } else {
+            lightEffect.setAttribute('visible', false);
+            confettis.forEach(c => {
+              c.setAttribute('visible', false);
+              c.removeAttribute('animation');
+            });
           }
         });
       </script>
