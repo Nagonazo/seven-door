@@ -1,12 +1,11 @@
 <html>
   <head>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://rawcdn.githack.com/jeromeetienne/ar.js/2.0.1/aframe/build/aframe-ar.min.js"></script>
-    </head>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.min.js"></script>
+  </head>
   <body style="margin: 0; overflow: hidden">
     <a-scene embedded arjs>
       <a-assets>
-        <!-- プレゼント画像 -->
         <img id="gift" src="gift.png">
       </a-assets>
 
@@ -15,16 +14,17 @@
         <a-image id="giftbox"
                  src="#gift"
                  rotation="0 270 0"
-                 position="-90 0 0"
+                 position="0 0 0"
                  scale="5 5 5">
         </a-image>
 
-        <!-- 成功テキスト（最初は非表示） -->
+        <!-- 成功テキスト -->
         <a-entity id="successText"
                   position="0 1.5 0"
                   visible="false"
                   text="value: 成功！; color: gold; align: center; width: 4"
-                  animation__fadein="property: opacity; from: 0; to: 1; dur: 1000; startEvents: showText">
+                  material="opacity: 0"
+                  animation__fadein="property: material.opacity; from: 0; to: 1; dur: 1000; startEvents: showText">
         </a-entity>
       </a-marker>
 
@@ -35,15 +35,14 @@
         const successText = document.getElementById('successText');
 
         gift.addEventListener('click', () => {
-          // 回転：左周りに45度ずつ（8方向対応）
           let currentY = gift.getAttribute('rotation').y;
           let nextY = (currentY + 45) % 360;
           gift.setAttribute('rotation', `0 ${nextY} 0`);
 
-          // 正解方向が「90度（右向き）」だと仮定
+          // 正解の方向が90度（右向き）
           if (nextY === 90) {
             successText.setAttribute('visible', true);
-            successText.emit('showText'); // フェードイン開始
+            successText.emit('showText');
           }
         });
       </script>
