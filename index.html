@@ -29,10 +29,15 @@
                   visible="false"
                   text="value: 成功！; color: gold; align: center; width: 4">
         </a-entity>
+        
+        <!-- 紙吹雪 -->
+        <a-image id="confetti1" src="#confetti" position="0 2 -1" scale="0.3 0.3 0.3" visible="false"></a-image>
+        <a-image id="confetti2" src="#confetti" position="0.5 2.2 -1" scale="0.3 0.3 0.3" visible="false"></a-image>
+        <a-image id="confetti3" src="#confetti" position="-0.5 2.4 -1" scale="0.3 0.3 0.3" visible="false"></a-image>
+      </a-marker>
 
-        <!-- スポットライト -->
+       
         <!-- スポットライト：マーカーの外に置く -->
-
         <a-light id="lightEffect"
           type="spot"
           color="yellow"
@@ -45,14 +50,7 @@
           rotation="-90 0 0"
           visible="false">
         </a-light>
-        </a-entity>
-
-        <!-- 紙吹雪 -->
-        <a-image id="confetti1" src="#confetti" position="0 2 -1" scale="0.3 0.3 0.3" visible="false"></a-image>
-        <a-image id="confetti2" src="#confetti" position="0.5 2.2 -1" scale="0.3 0.3 0.3" visible="false"></a-image>
-        <a-image id="confetti3" src="#confetti" position="-0.5 2.4 -1" scale="0.3 0.3 0.3" visible="false"></a-image>
-      </a-marker>
-
+      
       <a-entity camera></a-entity>
 
       <script>
