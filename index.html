@@ -31,17 +31,20 @@
         </a-entity>
 
         <!-- スポットライト -->
-        <a-entity id="lightEffect" visible="false">
-          <a-light type="spot"
-                   color="yellow"
-                   intensity="2"
-                   angle="30"
-                   penumbra="0.5"
-                   distance="10"
-                   decay="2"
-                   position="0 5 0"
-                   target="#box">
-          </a-light>
+        <!-- スポットライト：マーカーの外に置く -->
+
+        <a-light id="lightEffect"
+          type="spot"
+          color="yellow"
+          intensity="2"
+          angle="45"
+          penumbra="0.5"
+          distance="10"
+          decay="2"
+          position="0 5 0"
+          rotation="-90 0 0"
+          visible="false">
+        </a-light>
         </a-entity>
 
         <!-- 紙吹雪 -->
