@@ -16,25 +16,32 @@
       <a-marker preset="hiro">
         <!-- プレゼント画像 -->
         <a-image id="box"
-          src="#present"
-          position="0 0 0"
-          rotation="-90 0 0"
-          scale="5 5 5">
+                 src="#present"
+                 position="0 0 0"
+                 rotation="-90 0 0"
+                 scale="5 5 5"
+                 material="metalness: 0.5; roughness: 0.3">
         </a-image>
+
         <!-- 成功テキスト -->
         <a-entity id="successText"
-          position="0 4 0"
-          visible="true"
-          text="value: 成功！; color: black; align: center; width: 4"
-          scale="2 2 2">
+                  position="0 3 0"
+                  visible="false"
+                  text="value: 成功！; color: gold; align: center; width: 4">
         </a-entity>
-        <!-- 光のエフェクト -->
-        <a-entity id="lightEffect" visible="false" position="0 0 0">
-          <a-sphere radius="0.3"
-            color="yellow"
-            scale="5 5 5"
-            material="emissive: yellow; emissiveIntensity: 2; opacity: 0.5">
-          </a-sphere>
+
+        <!-- スポットライト -->
+        <a-entity id="lightEffect" visible="false">
+          <a-light type="spot"
+                   color="yellow"
+                   intensity="2"
+                   angle="30"
+                   penumbra="0.5"
+                   distance="10"
+                   decay="2"
+                   position="0 5 0"
+                   target="#box">
+          </a-light>
         </a-entity>
 
         <!-- 紙吹雪 -->
@@ -69,7 +76,6 @@
           if (isCorrect) {
             lightEffect.setAttribute('visible', true);
             successText.setAttribute('visible', true);
-            successText.emit('showText');
 
             confettis.forEach((c, i) => {
               c.setAttribute('visible', true);
